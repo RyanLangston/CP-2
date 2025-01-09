@@ -1,4 +1,5 @@
 import pygame
+
 def main():
     print("Hello from cs-2!")
 
