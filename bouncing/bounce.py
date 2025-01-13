@@ -13,7 +13,7 @@ RED = (255, 0, 0)
 # Image Load
 prisonMike = py.image.load("mikey.jpg")
 prisonMike.set_colorkey(BLACK)
-resized_mike = py.transform.scale(prisonMike, [50,50])
+resized_mike = py.transform.scale(prisonMike, [50, 50])
 
 # Audio loading
 bounceSound = py.mixer.Sound("homer.mp3")
@@ -58,7 +58,7 @@ while not done:
 
     # All your Drawing goes here
     rotatedMike = py.transform.rotate(resized_mike, rotation)
-    mike_rect = rotatedMike.get_rect(center = (rect_x +25, rect_y + 25))
+    mike_rect = rotatedMike.get_rect(center=(rect_x + 25, rect_y + 25))
     screen.blit(rotatedMike, mike_rect.topleft)
     py.display.flip()
 
