@@ -20,7 +20,7 @@ bounceSound = py.mixer.Sound("homer.mp3")
 py.mixer.music.load("never-1.mp3")
 
 # Set up the screen
-SIZE = [1200, 600]
+SIZE = [900, 600]
 rect_x = 100
 rect_y = 100
 speed_x = 2
