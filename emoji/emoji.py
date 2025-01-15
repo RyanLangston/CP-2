@@ -9,7 +9,7 @@ RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 
 # Window Settings
-size = (700, 500)
+size = (900, 900)
 screen = py.display.set_mode(size)
 
 # Stuff
@@ -20,17 +20,18 @@ clock = py.time.Clock()
 
 # Emoji Variables
 # Position in space
-emoji_x = 20 # Initial X Coordinate
-emoji_y = 300 # Initial Y Coordinate
-emoji_dx = 2 # Horizontal Speed
-emoji_dy = 1 # Vertical Speed
+emoji_x = 20  # Initial X Coordinate
+emoji_y = 300  # Initial Y Coordinate
+emoji_dx = 2  # Horizontal Speed
+emoji_dy = 1  # Vertical Speed
+
 
 # Emoji Function
-def emojidraw(x: int,y: int):
+def emojidraw(x: int, y: int):
     """
     Draw emoji at position (x, y)
     """
-    py.draw.ellipse(screen, BLACK, [x,y,250,100],2)
+    py.draw.ellipse(screen, BLACK, [x, y, 250, 250], 2)
 
 
 # Program Loop
@@ -45,15 +46,16 @@ while not done:
         emoji_y += emoji_dy
 
         # Check for screen boundaries collision
-        if emoji_x + 250 > 700 or emoji_x < 0: # Horizontal Bounds
+        if emoji_x + 250 > 900 or emoji_x < 0:  # Horizontal Bounds
             emoji_dx *= -1
-        # Game Logic
+        if emoji_y + 100 > 900 or emoji_y < 0:  # Vertical Bounds
+            emoji_dy *= -1
 
         # Screen Clearing code
         screen.fill(WHITE)
 
         # Actual drawing
-        emojidraw()
+        emojidraw(emoji_x, emoji_y)
 
         py.display.flip()
 
