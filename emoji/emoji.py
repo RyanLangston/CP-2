@@ -20,15 +20,17 @@ clock = py.time.Clock()
 
 # Emoji Variables
 # Position in space
-emoji_x = 20
-emoji_y = 300
+emoji_x = 20 # Initial X Coordinate
+emoji_y = 300 # Initial Y Coordinate
+emoji_dx = 2 # Horizontal Speed
+emoji_dy = 1 # Vertical Speed
 
 # Emoji Function
-def emojidraw():
+def emojidraw(x: int,y: int):
     """
-    Should draw a emoji and also animate it
+    Draw emoji at position (x, y)
     """
-    py.draw.ellipse(screen, BLACK, [emoji_x,emoji_y,250,100],2)
+    py.draw.ellipse(screen, BLACK, [x,y,250,100],2)
 
 
 # Program Loop
@@ -38,6 +40,13 @@ while not done:
         if event.type == py.QUIT:
             done = True
 
+        # Emoji Position Updating
+        emoji_x += emoji_dx
+        emoji_y += emoji_dy
+
+        # Check for screen boundaries collision
+        if emoji_x + 250 > size[0] or emoji_x < 0:
+            emoji_dx *= -1
         # Game Logic
 
         # Screen Clearing code
