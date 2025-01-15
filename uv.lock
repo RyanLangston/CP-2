@@ -5,6 +5,7 @@ requires-python = ">=3.13"
 members = [
     "bouncing",
     "cp-2",
+    "emoji",
 ]
 
 [[package]]
@@ -22,6 +23,17 @@ requires-dist = [{ name = "pygame", specifier = ">=2.6.1" }]
 name = "cp-2"
 version = "0.1.0"
 source = { virtual = "." }
+
+[[package]]
+name = "emoji"
+version = "0.1.0"
+source = { virtual = "emoji" }
+dependencies = [
+    { name = "pygame" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "pygame", specifier = ">=2.6.1" }]
 
 [[package]]
 name = "pygame"
