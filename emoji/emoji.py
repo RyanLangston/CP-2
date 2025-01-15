@@ -18,6 +18,12 @@ done = False
 # CLock
 clock = py.time.Clock()
 
+
+# Emoji Function
+def emojidraw():
+    py.draw.ellipse(screen, BLACK, [20,20,250,100],2)
+
+
 # Program Loop
 while not done:
     # Main Event Loop
@@ -29,6 +35,9 @@ while not done:
 
         # Screen Clearing code
         screen.fill(WHITE)
+
+        # Actual drawing
+        emojidraw()
 
         py.display.flip()
 
