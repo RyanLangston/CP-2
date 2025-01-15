@@ -15,6 +15,10 @@ prisonMike = py.image.load("mikey.jpg")
 prisonMike.set_colorkey(BLACK)
 resized_mike = py.transform.scale(prisonMike, [50, 50])
 
+# Load Background Image
+background = py.image.load("bagel.jpg")
+background = py.transform.scale(background, [900, 600])
+
 # Audio loading
 bounceSound = py.mixer.Sound("homer.mp3")
 py.mixer.music.load("never-1.mp3")
@@ -55,6 +59,7 @@ while not done:
 
     # Drawing Section
     screen.fill(BLACK)  # Always clear screen first
+    screen.blit(background, (0, 0))  # Draw the background image
 
     # All your Drawing goes here
     rotatedMike = py.transform.rotate(resized_mike, rotation)
