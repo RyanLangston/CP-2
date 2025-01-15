@@ -9,7 +9,7 @@ RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 
 # Window Settings
-size = (900, 900)
+size = (700, 500)
 screen = py.display.set_mode(size)
 
 # Stuff
@@ -31,7 +31,7 @@ def emojidraw(x: int, y: int):
     """
     Draw emoji at position (x, y)
     """
-    py.draw.ellipse(screen, BLACK, [x, y, 250, 250], 2)
+    py.draw.circle(screen, BLACK, (x, y), 100, 2)
 
 
 # Program Loop
