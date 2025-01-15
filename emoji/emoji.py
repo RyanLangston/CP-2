@@ -45,7 +45,7 @@ while not done:
         emoji_y += emoji_dy
 
         # Check for screen boundaries collision
-        if emoji_x + 250 > 700 or emoji_x < 0:
+        if emoji_x + 250 > 700 or emoji_x < 0: # Horizontal Bounds
             emoji_dx *= -1
         # Game Logic
 
