@@ -21,6 +21,9 @@ clock = py.time.Clock()
 
 # Emoji Function
 def emojidraw():
+    """
+    Should draw a emoji and also animate it
+    """
     py.draw.ellipse(screen, BLACK, [20,20,250,100],2)
 
 
