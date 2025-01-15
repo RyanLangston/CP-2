@@ -18,13 +18,17 @@ done = False
 # CLock
 clock = py.time.Clock()
 
+# Emoji Variables
+# Position in space
+emoji_x = 20
+emoji_y = 300
 
 # Emoji Function
 def emojidraw():
     """
     Should draw a emoji and also animate it
     """
-    py.draw.ellipse(screen, BLACK, [20,20,250,100],2)
+    py.draw.ellipse(screen, BLACK, [emoji_x,emoji_y,250,100],2)
 
 
 # Program Loop
