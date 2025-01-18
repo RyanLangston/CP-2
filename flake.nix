@@ -13,9 +13,9 @@
       in
       {
         devShells.default = pkgs.mkShell {
-          buildInputs = [
-              pkgs.uv
-            ];
-          };
+          packages = with pkgs; [
+            (python313.withPackages (ps: [ ps.pygame ps.ruff ]))
+          ];
+        };
       });
 }
