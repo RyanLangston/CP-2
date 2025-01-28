@@ -1,7 +1,5 @@
-# THIS IS SOOOOO COOOOOL
-
 import pygame as py
-import random
+from random import randint, choice
 
 # Initialize Engine
 py.init()
@@ -13,24 +11,53 @@ BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
+# Set up the screen
+SIZE = [1280, 800]
 
 class Rectangle:
     def __init__(self):
-        self.x = random.randint(0, 700)
-        self.y = random.randint(0, 500)
+        self.x = randint(0, SIZE[0])
+        self.y = randint(0, SIZE[1])
+        self.height = randint(20, 70)
+        self.width = randint(20, 70)
+        self.changeX = choice([-3, -2, -1, 1, 2, 3])
+        self.changeY = choice([-3, -2, -1, 1, 2, 3])
+        self.r = randint(0, 255)
+        self.g = randint(0, 255)
+        self.b = randint(0, 255)
 
     def draw(self):
-        py.draw.rect(screen, GREEN, [self.x, self.y, 10, 10])
+        py.draw.rect(screen, [self.r, self.g, self.g], [self.x, self.y, self.width, self.height])
 
+    def move(self):
+        self.x += self.changeX
+        self.y += self.changeY
+        self.changeX += randint(-1,1)
+        self.changeY += randint(-1,1)
+        self.changeX *= choice([-1,1])
+        self.changeY *= choice([-1,1])
 
-# Set up the screen
-SIZE = [900, 600]
+        if self.x > SIZE[0] - self.width or self.x < 0:
+            self.changeX *= -1
+        if self.y > SIZE[1] - self.height or self.y < 0:
+            self.changeY *= -1
+
+class Ellipse(Rectangle):
+    def draw(self):
+        py.draw.ellipse(screen, [self.r, self.g, self.b], [self.x, self.y, self.width, self.height])
 
 screen = py.display.set_mode(SIZE)
 
 clock = py.time.Clock()
 
-my_object = Rectangle()
+my_list = []
+
+for i in range(50):
+    my_object = Rectangle()
+    my_other_object = Ellipse()
+    my_list.append(my_object)
+    my_list.append(my_other_object)
+
 
 done = False
 # Main Program Loop
@@ -42,6 +69,10 @@ while not done:
 
     # Drawing Section
     screen.fill(BLACK)  # Always clear screen first
+
+    for object in my_list:
+        object.draw()
+        object.move()
 
     # All your Drawing goes here
     py.display.flip()
