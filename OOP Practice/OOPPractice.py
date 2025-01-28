@@ -14,6 +14,7 @@ RED = (255, 0, 0)
 # Set up the screen
 SIZE = [1280, 800]
 
+
 class Rectangle:
     def __init__(self):
         self.x = randint(0, SIZE[0])
@@ -27,26 +28,33 @@ class Rectangle:
         self.b = randint(0, 255)
 
     def draw(self):
-        py.draw.rect(screen, [self.r, self.g, self.g], [self.x, self.y, self.width, self.height])
+        py.draw.rect(
+            screen, [self.r, self.g, self.g], [self.x, self.y, self.width, self.height]
+        )
 
     def move(self):
         self.x += self.changeX
         self.y += self.changeY
-        self.changeX += randint(-1,1)
-        self.changeY += randint(-1,1)
-        self.changeX *= choice([-1,1])
-        self.changeY *= choice([-1,1])
+        self.changeX += randint(-1, 1)
+        self.changeY += randint(-1, 1)
+        self.changeX *= choice([-1, 1])
+        self.changeY *= choice([-1, 1])
 
         if self.x > SIZE[0] - self.width or self.x < 0:
             self.changeX *= -1
         if self.y > SIZE[1] - self.height or self.y < 0:
             self.changeY *= -1
 
+
 class Ellipse(Rectangle):
     def draw(self):
-        py.draw.ellipse(screen, [self.r, self.g, self.b], [self.x, self.y, self.width, self.height])
+        py.draw.ellipse(
+            screen, [self.r, self.g, self.b], [self.x, self.y, self.width, self.height]
+        )
 
-screen = py.display.set_mode(SIZE)
+
+# The py.scaled and py.doublebuff makes vsync work, which should hopefully prevent some artifacting at higher speeds
+screen = py.display.set_mode(SIZE, py.SCALED | py.DOUBLEBUF)
 
 clock = py.time.Clock()
 
