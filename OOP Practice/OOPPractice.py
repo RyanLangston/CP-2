@@ -66,7 +66,7 @@ clock = py.time.Clock()
 
 my_list = []
 
-for i in range(10):
+for i in range(50):
     my_object = Rectangle()
     my_other_object = Ellipse()
     my_list.append(my_object)
