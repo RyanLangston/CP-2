@@ -8,7 +8,7 @@ class Player:
         self.thirst = 0
         self.canteen = 4
         self.distance_traveled = 0
-    
+
     def drink(self):
         """Player drinks from canteen"""
         if self.thirst > 0:
@@ -19,7 +19,7 @@ class Player:
                 print("Your canteen is empty")
         else:
             print("You aren't thirsty")
-    
+
     def increase_thirst(self):
         self.thirst += 1
 
@@ -28,7 +28,7 @@ class Player:
         if speed == 1:
             # Move at a moderate speed
             self.distance_traveled += randint(5, 12)
-            
+
 
 class Camel:
     """Camels stats"""
@@ -45,14 +45,15 @@ class Camel:
         """Increases camels exhaustion level"""
         self.exhaustion += increase
 
-class Natives:
 
+class Natives:
     def __init__(self):
         self.distance_traveled = -13
 
     def move(self):
         """The natives always move the same distance regardless"""
         self.distance_traveled += randint(7, 14)
+
 
 class Game:
     """The main games logic and state"""
@@ -73,11 +74,11 @@ class Game:
         elif self.player.thirst > 4:
             self.game_over = True
             print("You die of thirst")
-        elif self.distance_traveled == 200:
+        elif self.player.distance_traveled >= 200:
             self.game_over = True
             self.win = True
             print("YOU WON!!! LESSS GOOOO")
-        
+
     def print_options(self):
         print("\nChoose an action:")
         print("1. Drink from your canteen")
@@ -86,30 +87,31 @@ class Game:
         print("4. Stop for the night")
         print("5. Status check")
         print("6. Quit\n")
-        
+
     def every_round(self):
         """Stuff that runs every single game loop regardless"""
         self.natives.move()
-    
 
     def handle_player_choice(self, choice):
         """Handles the players choice."""
-        if choice ==  1:
+        if choice == 1:
             self.player.drink()
         # Need to use an if statement again so that we can make rounds work correctly
         elif choice == 2:
             self.player.movement(1)
             self.every_round()
-    
+
     def check_status(self):
         """Allows the player to see stats"""
         print("\nThirst: " + self.player.thirst)
         print("\nDistance traveled: " + self.player.distance_traveled)
         print("\nNatives Distance Traveled" + self.natives.distance_traveled)
-        
-        
+
     def play(self):
         while not self.game_over:
+            self.print_options()
+            choice = int(input("Your choice? "))
+            self.handle_player_choice(choice)
             self.check_game_status()
 
 
