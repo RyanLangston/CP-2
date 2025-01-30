@@ -28,6 +28,9 @@ class Player:
         if speed == 1:
             # Move at a moderate speed
             self.distance_traveled += randint(5, 12)
+        if speed == 2:
+            # Move at full speed
+            self.distancce_traveled += randint(10, 20)
 
 
 class Camel:
@@ -99,6 +102,9 @@ class Game:
         # Need to use an if statement again so that we can make rounds work correctly
         elif choice == 2:
             self.player.movement(1)
+            self.every_round()
+        elif choice == 3:
+            self.player.movement(2)
             self.every_round()
 
     def check_status(self):
