@@ -110,7 +110,15 @@ class Game:
     def play(self):
         while not self.game_over:
             self.print_options()
-            choice = int(input("Your choice? "))
+            try:
+                choice = int(input("Your choice? "))
+                if choice < 1 or choice > 6:
+                    # Uses proper python syntax for error handling
+                    # ValueError is just a basic method of error handling
+                    raise ValueError("Invalid choice")
+                self.handle_player_choice(choice)
+            except ValueError:
+                print("Invalid input, please enter a number between 1 and 6")
             self.handle_player_choice(choice)
             self.check_game_status()
 
