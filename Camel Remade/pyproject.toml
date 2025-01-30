@@ -1,10 +1,9 @@
 [project]
-name = "cp-2"
+name = "camel-remade"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = []
-
-[tool.uv.workspace]
-members = ["bouncing", "emoji", "OOP Practice", "Camel Remade"]
+dependencies = [
+    "ruff>=0.9.3",
+]
