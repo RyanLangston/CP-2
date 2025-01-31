@@ -15,6 +15,8 @@ class Player:
             if self.canteen != 0:
                 # Resets players thirst
                 self.thirst = 0
+                self.canteen -= 1
+                print("You take a drink from your canteen.")
             else:
                 print("Your canteen is empty")
         else:
@@ -27,10 +29,16 @@ class Player:
         """Handles player movement"""
         if speed == 1:
             # Move at a moderate speed
-            self.distance_traveled += randint(5, 12)
+            miles = randint(5, 12)
+            self.distance_traveled += miles
+            print(f"You traveled {miles} miles at moderate speed.")
+            self.increase_thirst()
         if speed == 2:
             # Move at full speed
-            self.distancce_traveled += randint(10, 20)
+            miles = randint(10, 20)
+            self.distance_traveled += miles
+            print(f"You traveled {miles} miles at full speed.")
+            self.increase_thirst()
 
 
 class Camel:
@@ -81,6 +89,9 @@ class Game:
             self.game_over = True
             self.win = True
             print("YOU WON!!! LESSS GOOOO")
+        elif self.natives.distance_traveled >= self.player.distance_traveled:
+            self.game_over = True
+            print("The natives have caught you! You lose.")
 
     def print_options(self):
         print("\nChoose an action:")
@@ -94,6 +105,10 @@ class Game:
     def every_round(self):
         """Stuff that runs every single game loop regardless"""
         self.natives.move()
+        self.player.increase_thirst()
+        print(f"The natives are {self.player.distance_traveled - self.natives.distance_traveled} miles behind you.")
+        print(f"Camel exhaustion level: {self.camel.exhaustion}")
+        print(f"Player thirst level: {self.player.thirst}")
 
     def handle_player_choice(self, choice):
         """Handles the players choice."""
@@ -102,16 +117,28 @@ class Game:
         # Need to use an if statement again so that we can make rounds work correctly
         elif choice == 2:
             self.player.movement(1)
-            self.every_round()
+            self.camel.increase_exhaustion(1)
         elif choice == 3:
             self.player.movement(2)
+            self.camel.increase_exhaustion(2)
+        elif choice == 4:
+            self.camel.reset_exhaustion()
+        elif choice == 5:
+            self.check_status()
+        elif choice == 6:
+            self.game_over = True
+        
+        if choice in [2, 3, 4]:
             self.every_round()
+            self.check_game_status()
 
     def check_status(self):
         """Allows the player to see stats"""
-        print("\nThirst: " + self.player.thirst)
-        print("\nDistance traveled: " + self.player.distance_traveled)
-        print("\nNatives Distance Traveled" + self.natives.distance_traveled)
+        print("\nThirst: " + str(self.player.thirst))
+        print("Canteen drinks left: " + str(self.player.canteen))
+        print("Distance traveled: " + str(self.player.distance_traveled))
+        print("Miles the natives are from you: " + str(self.player.distance_traveled - self.natives.distance_traveled))
+        print("Camel exhaustion: " + str(self.camel.exhaustion))
 
     def play(self):
         while not self.game_over:
@@ -119,14 +146,10 @@ class Game:
             try:
                 choice = int(input("Your choice? "))
                 if choice < 1 or choice > 6:
-                    # Uses proper python syntax for error handling
-                    # ValueError is just a basic method of error handling
                     raise ValueError("Invalid choice")
                 self.handle_player_choice(choice)
             except ValueError:
                 print("Invalid input, please enter a number between 1 and 6")
-            self.handle_player_choice(choice)
-            self.check_game_status()
 
 
 game = Game()
