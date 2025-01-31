@@ -8,6 +8,7 @@ members = [
     "cp-2",
     "emoji",
     "oop-practice",
+    "peer-reviews",
 ]
 
 [[package]]
@@ -52,6 +53,17 @@ requires-dist = [{ name = "pygame", specifier = ">=2.6.1" }]
 name = "oop-practice"
 version = "0.1.0"
 source = { virtual = "OOP Practice" }
+dependencies = [
+    { name = "pygame" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "pygame", specifier = ">=2.6.1" }]
+
+[[package]]
+name = "peer-reviews"
+version = "0.1.0"
+source = { virtual = "Peer Reviews" }
 dependencies = [
     { name = "pygame" },
 ]
