@@ -98,6 +98,7 @@ while not done:
         block_list.add(block)
         all_sprites_list.add(block)
 
+    block_list.update()
     all_sprites_list.draw(screen)
 
     # Update Display
