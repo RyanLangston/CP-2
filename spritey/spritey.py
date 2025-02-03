@@ -11,6 +11,7 @@ BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
+
 # Classes
 class Block(py.sprite.Sprite):
     def __init__(self, color, width, height):
@@ -29,13 +30,13 @@ class Block(py.sprite.Sprite):
     def reset_pos(self):
         self.rect.y = random.randrange(-300, -20)
         self.rect.x = random.randrange(0, screen_width)
-    
+
     def update(self):
         # Call each frame, move the block down by 1 pixel
         self.rect.y += 1
         if self.rect.y > screen_height:
             self.reset_pos()
-    
+
 
 # Window Settings
 # SIZE = (700, 500)
