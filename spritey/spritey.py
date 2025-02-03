@@ -70,7 +70,7 @@ for i in range(50):
 player = Block(RED, 20, 15)
 all_sprites_list.add(player)
 
-score: int = 0
+score = 0
 
 # Main Program Loop
 while not done:
