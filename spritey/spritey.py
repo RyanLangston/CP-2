@@ -11,7 +11,6 @@ BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
-
 # Classes
 class Block(py.sprite.Sprite):
     def __init__(self, color, width, height):
