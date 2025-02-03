@@ -27,6 +27,16 @@ class Block(py.sprite.Sprite):
 
         self.rect = self.image.get_rect()
 
+    def reset_pos(self):
+        self.rect.y = random.randrange(-300, -20)
+        self.rect.x = random.randrange(0, screen_width)
+    
+    def update(self):
+        # Call each frame, move the block down by 1 pixel
+        self.rect.y += 1
+        if self.rect.y > screen_height:
+            self.reset_pos()
+    
 
 # Window Settings
 # SIZE = (700, 500)
@@ -68,6 +78,8 @@ while not done:
         if event.type == py.QUIT:
             done = True
 
+    block_list.update()
+
     # Clear Screen
     screen.fill(WHITE)
     # Get current mouse position
@@ -82,6 +94,9 @@ while not done:
     for block in blocks_hit_list:
         score += 1
         print(score)
+        block.reset_pos()
+        block_list.add(block)
+        all_sprites_list.add(block)
 
     all_sprites_list.draw(screen)
 
