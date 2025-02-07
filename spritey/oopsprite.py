@@ -22,6 +22,10 @@ screen = py.display.set_mode(size)
 done = False
 clock = py.time.Clock()
 
+def random_color():
+    """Generate a random color."""
+    return (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+
 class Circle(py.sprite.Sprite):
     def __init__(self, color, radius):
         super().__init__()
@@ -60,7 +64,8 @@ class Circle(py.sprite.Sprite):
         min_radius = max(10, player.radius * 0.8)
         max_radius = player.radius * 2  # Allow new circles to be up to twice the player's size
         new_radius = random.uniform(min_radius, max_radius)
-        new_circle = Circle(random.choice([BLUE, GREEN, BLACK]), new_radius)
+        new_color = random_color()
+        new_circle = Circle(new_color, new_radius)
         # Respawn offscreen
         if random.choice([True, False]):
             new_circle.rect.x = random.choice([-new_circle.radius * 2, size[0] + new_circle.radius * 2])
@@ -85,7 +90,8 @@ all_sprites.add(player)
 # Create enemy circles
 for _ in range(20):
     radius = random.randint(10, 30)
-    color = random.choice([BLUE, GREEN, BLACK])
+    base_color = random.choice([BLUE, GREEN, BLACK])
+    color = random_color()
     circle = Circle(color, radius)
     circle.rect.x = random.randint(0, size[0] - radius * 2)
     circle.rect.y = random.randint(0, size[1] - radius * 2)
