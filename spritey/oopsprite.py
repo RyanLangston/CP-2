@@ -60,7 +60,8 @@ class Circle(py.sprite.Sprite):
         self.rect = self.image.get_rect(center=old_center)
 
     def respawn(self):
-        circles.remove(self)
+        if self in circles:
+            circles.remove(self)
         self.kill()
         min_radius = max(10, player.radius * 0.8)
         max_radius = player.radius * 2  # Allow new circles to be up to twice the player's size
@@ -73,11 +74,11 @@ class Circle(py.sprite.Sprite):
             new_circle.rect.y = random.uniform(0, size[1])
         else:
             new_circle.rect.y = random.choice([-new_circle.radius * 2, size[1] + new_circle.radius * 2])
-        new_circle.speed_x = random.choice([-1, 1]) * random.randint(3, 6 + int(player.radius // 10))
         new_circle.speed_y = random.choice([-1, 1]) * random.randint(3, 6 + int(player.radius // 10))
-        new_circle.speed_y = random.choice([-1, 1]) * random.randint(3, 6 + int(player.radius / 10))
-        all_sprites.add(new_circle)
-        circles.add(new_circle)
+        new_circle.speed_y = random.choice([-1, 1]) * random.randint(3, 6 + int(player.radius // 10))
+        if new_circle not in circles:
+            circles.add(new_circle)
+            all_sprites.add(new_circle)
 
 # Create Sprite Groups
 all_sprites = py.sprite.Group()
