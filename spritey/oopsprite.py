@@ -120,6 +120,6 @@ while not done:
     # Update Display
     py.display.flip()
     # Control Frame Rate (60 FPS)
-    clock.tick(40)
+    clock.tick(60)
 
 py.quit()
