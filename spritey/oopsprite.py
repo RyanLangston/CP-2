@@ -30,7 +30,7 @@ class Circle(py.sprite.Sprite):
     def __init__(self, color, radius):
         super().__init__()
         self.color = color
-        self.radius: float = float(radius)
+        self.radius = float(radius)
         self.image = py.Surface([self.radius * 2, self.radius * 2], py.SRCALPHA)
         py.draw.circle(self.image, self.color, (self.radius, self.radius), self.radius)
         self.rect = self.image.get_rect()
@@ -54,12 +54,13 @@ class Circle(py.sprite.Sprite):
     def grow(self, amount):
         """Grows the circle by a set amount"""
         self.radius += amount
+        old_center = self.rect.center
         self.image = py.Surface([self.radius * 2, self.radius * 2], py.SRCALPHA)
         py.draw.circle(self.image, self.color, (self.radius, self.radius), self.radius)
-        self.rect = self.image.get_rect(center=self.rect.center)
+        self.rect = self.image.get_rect(center=old_center)
 
     def respawn(self):
-        """Respawns enemy circles"""
+        circles.remove(self)
         self.kill()
         min_radius = max(10, player.radius * 0.8)
         max_radius = player.radius * 2  # Allow new circles to be up to twice the player's size
@@ -72,8 +73,8 @@ class Circle(py.sprite.Sprite):
             new_circle.rect.y = random.uniform(0, size[1])
         else:
             new_circle.rect.y = random.choice([-new_circle.radius * 2, size[1] + new_circle.radius * 2])
-            new_circle.rect.x = random.uniform(0, size[0])
-        new_circle.speed_x = random.choice([-1, 1]) * random.randint(3, 6 + int(player.radius / 10))
+        new_circle.speed_x = random.choice([-1, 1]) * random.randint(3, 6 + int(player.radius // 10))
+        new_circle.speed_y = random.choice([-1, 1]) * random.randint(3, 6 + int(player.radius // 10))
         new_circle.speed_y = random.choice([-1, 1]) * random.randint(3, 6 + int(player.radius / 10))
         all_sprites.add(new_circle)
         circles.add(new_circle)
@@ -103,6 +104,7 @@ while not done:
     for event in py.event.get():
         if event.type == py.QUIT:
             done = True
+            break
 
     # Clear Screen
     screen.fill(BLACK)
