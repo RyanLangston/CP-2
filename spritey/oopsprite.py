@@ -36,6 +36,7 @@ class Circle(py.sprite.Sprite):
         self.speed_y = random.choice([-1, 1]) * random.randint(3, 6)
 
     def update(self):
+        """Updates stuff"""
         self.rect.y += self.speed_y
         self.rect.x += self.speed_x
         if self.rect.right < 0 or self.rect.left > size[0] or self.rect.bottom < 0 or self.rect.top > size[1]:
