@@ -105,7 +105,7 @@ while not done:
             done = True
 
     # Clear Screen
-    screen.fill(WHITE)
+    screen.fill(BLACK)
 
     # Update player pos
     pos = py.mouse.get_pos()
