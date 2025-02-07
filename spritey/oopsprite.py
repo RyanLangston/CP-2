@@ -12,38 +12,37 @@ GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
 # Window Settings
-size = (1280, 800)
+info = py.display.Info()
+screen_width = info.current_w
+screen_height = info.current_h
+size = (screen_width, screen_height)
 screen = py.display.set_mode(size)
 
 # Game Variables
 done = False
 clock = py.time.Clock()
 
-
 class Circle(py.sprite.Sprite):
     def __init__(self, color, radius):
         super().__init__()
         self.color = color
-        self.radius = radius
-        # We use SRCALPHA to allow for semi transparent objects, allowing for smoother edges
+        self.radius: float = float(radius)
         self.image = py.Surface([self.radius * 2, self.radius * 2], py.SRCALPHA)
         py.draw.circle(self.image, self.color, (self.radius, self.radius), self.radius)
         self.rect = self.image.get_rect()
-        self.rect.x = random.randint(0, size[0] - self.radius * 2)
-        self.rect.y = random.randint(0, size[1] - self.radius * 2)
-        self.speed_x = random.choice([-1, 1] * random.randint(1, 3))
-        self.speed_y = random.choice([-1, 1] * random.randint(1, 3))
+        self.rect.x = random.uniform(float(0), float(size[0]) - float(self.radius * 2))
+        self.rect.y = random.uniform(float(0), float(size[1]) - float(self.radius * 2))
+        self.speed_x = random.choice([-1, 1]) * random.randint(3, 6)
+        self.speed_y = random.choice([-1, 1]) * random.randint(3, 6)
 
     def update(self):
         self.rect.y += self.speed_y
         self.rect.x += self.speed_x
         if self.rect.right < 0 or self.rect.left > size[0] or self.rect.bottom < 0 or self.rect.top > size[1]:
-            self.kill()
-            new_circle = Circle(random.choice([BLUE, GREEN, BLACK]), random.randint(10, 30))
-            all_sprites.add(new_circle)
-            circles.add(new_circle)
+            self.respawn()
 
     def reset_pos(self):
+        """Resets the position"""
         self.rect.y = random.randint(0, size[1])
         self.rect.x = random.randint(0, size[0])
     
@@ -55,12 +54,23 @@ class Circle(py.sprite.Sprite):
         self.rect = self.image.get_rect(center=self.rect.center)
 
     def respawn(self):
+        """Respawns enemy circles"""
         self.kill()
-        new_radius = max(10, min(player.radius * random.uniform(0.5, 1.5), 30))
+        min_radius = max(10, player.radius * 0.8)
+        max_radius = player.radius * 2  # Allow new circles to be up to twice the player's size
+        new_radius = random.uniform(min_radius, max_radius)
         new_circle = Circle(random.choice([BLUE, GREEN, BLACK]), new_radius)
+        # Respawn offscreen
+        if random.choice([True, False]):
+            new_circle.rect.x = random.choice([-new_circle.radius * 2, size[0] + new_circle.radius * 2])
+            new_circle.rect.y = random.uniform(0, size[1])
+        else:
+            new_circle.rect.y = random.choice([-new_circle.radius * 2, size[1] + new_circle.radius * 2])
+            new_circle.rect.x = random.uniform(0, size[0])
+        new_circle.speed_x = random.choice([-1, 1]) * random.randint(3, 6 + int(player.radius / 10))
+        new_circle.speed_y = random.choice([-1, 1]) * random.randint(3, 6 + int(player.radius / 10))
         all_sprites.add(new_circle)
         circles.add(new_circle)
-        # py.draw.circle(self.image, self.color, (self.radius))
 
 # Create Sprite Groups
 all_sprites = py.sprite.Group()
