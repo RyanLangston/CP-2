@@ -110,7 +110,7 @@ while not done:
     collided_circles = py.sprite.spritecollide(player, circles, False, py.sprite.collide_circle)
     for circle in collided_circles:
         if player.radius > circle.radius:
-            player.grow(circle.radius // 2)
+            player.grow(3)
             circle.respawn()
         else:
             done = True
