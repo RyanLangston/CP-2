@@ -16,7 +16,7 @@ info = py.display.Info()
 screen_width = info.current_w
 screen_height = info.current_h
 size = (screen_width, screen_height)
-screen = py.display.set_mode(size)
+screen = py.display.set_mode((size), vsync=1)
 
 # Game Variables
 done = False
