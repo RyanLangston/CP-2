@@ -89,7 +89,7 @@ all_sprites.add(player)
 
 # Create enemy circles
 for _ in range(20):
-    radius = random.randint(10, 30)
+    radius = random.randint(5, 15)  # Smaller initial radius
     base_color = random.choice([BLUE, GREEN, BLACK])
     color = random_color()
     circle = Circle(color, radius)
