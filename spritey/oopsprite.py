@@ -57,7 +57,10 @@ class Circle(py.sprite.Sprite):
     def respawn(self):
         self.kill()
         new_radius = max(10, min(player.radius * random.uniform(0.5, 1.5), 30))
-        py.draw.circle(self.image, self.color, (self.radius))
+        new_circle = Circle(random.choice([BLUE, GREEN, BLACK]), new_radius)
+        all_sprites.add(new_circle)
+        circles.add(new_circle)
+        # py.draw.circle(self.image, self.color, (self.radius))
 
 # Create Sprite Groups
 all_sprites = py.sprite.Group()
@@ -98,7 +101,7 @@ while not done:
     for circle in collided_circles:
         if player.radius > circle.radius:
             player.grow(circle.radius // 2)
-            circle.kill()
+            circle.respawn()
         else:
             done = True
 
