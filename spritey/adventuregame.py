@@ -157,3 +157,8 @@ class Game:
             self.clock.tick(10)  # Control game speed
 
         py.quit()
+
+# Run the game
+if __name__ == "__main__":
+    game = Game()
+    game.run()
