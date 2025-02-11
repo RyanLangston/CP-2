@@ -2,7 +2,13 @@ import pygame as py
 import random
 
 def create_seed():
-    return random.seed()
+    """Creates a pseudo-random seed"""
+    seed = random.randint(0, 2**32 - 1)
+    random.seed(seed)  # Initialize the random number generator with the seed
+    return seed
+
+seed = create_seed()
+print(seed)
 
 class LinearCongruentialGenerator:
     # THIS WAS WRITTEN WITH AI
