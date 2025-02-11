@@ -91,9 +91,11 @@ class Enemy(Character):
     """
     def __init__(self, x, y):
         super().__init__(x, y, 'G', (255, 0, 0))
+        # Use LCG for slight stati variation
+        lcg = LinearCongruentialGenerator()
         
         # Enemy specific Customizations
-        self.max_health = 50
+        self.max_health = int(50 + lcg.next() * 20) # 50 - 70 health
         self.health = self.max_health
         self.attack = 5
         self.defense = 2
