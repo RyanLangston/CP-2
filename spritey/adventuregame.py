@@ -7,9 +7,6 @@ def create_seed():
     random.seed(seed)  # Initialize the random number generator with the seed
     return seed
 
-seed = create_seed()
-print(seed)
-
 class LinearCongruentialGenerator:
     # THIS WAS WRITTEN WITH AI
     def __init__(self, seed=None):
