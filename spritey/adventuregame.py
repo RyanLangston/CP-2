@@ -1,6 +1,24 @@
 import pygame as py
 import random
 
+class LinearCongruentialGenerator:
+    def __init__(self, seed=None):
+        self.seed = seed or random.randint(0, 2**32)
+
+        # LCG parameters
+        self.multiplier = 1664525
+        self.increment = 1013904223
+        self.modulus = 2**32
+
+    def next(self):
+        # Generate next pseudo-random number
+        self.seed = (self.multiplier * self.seed + self.increment) % self.modulus
+        return self.seed / self.modulus
+
+    def range(self, min_val, max_val):
+        # Generate random number in specific range
+        return min_val + self.next() * (max_val - min_val)
+
 class Character(py.sprite.Sprite):
     """Character can be either an enemy or the player"""
     def __init__(self, x, y, char, color: tuple):
