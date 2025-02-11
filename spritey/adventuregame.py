@@ -1,7 +1,11 @@
 import pygame as py
 import random
 
+def create_seed():
+    return random.seed()
+
 class LinearCongruentialGenerator:
+    # THIS WAS WRITTEN WITH AI
     def __init__(self, seed=None):
         self.seed = seed or random.randint(0, 2**32)
 
