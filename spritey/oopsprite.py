@@ -75,7 +75,7 @@ class Circle(py.sprite.Sprite):
         else:
             new_circle.rect.y = random.choice([-new_circle.radius * 2, size[1] + new_circle.radius * 2])
         new_circle.speed_y = random.choice([-1, 1]) * random.randint(3, 6 + int(player.radius // 10))
-        new_circle.speed_y = random.choice([-1, 1]) * random.randint(3, 6 + int(player.radius // 10))
+        new_circle.speed_x = random.choice([-1, 1]) * random.randint(3, 6 + int(player.radius // 10))
         if new_circle not in circles:
             circles.add(new_circle)
             all_sprites.add(new_circle)
