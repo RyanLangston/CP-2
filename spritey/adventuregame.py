@@ -99,6 +99,9 @@ class Character(py.sprite.Sprite):
         
         
         # Positioning
+        self.rect = self.image.get_rect()
+        self.rect.x = x * 20 # Make sure it matches with tile size
+        self.rect.y = y * 20
         self.x = x
         self.y = y
 
@@ -250,7 +253,7 @@ class Game:
             self.handle_combat()
 
             # Clear screen
-            self.screen_fill((0, 0, 0))
+            self.screen.fill((0, 0, 0))
 
 
             # Draw dungeon
