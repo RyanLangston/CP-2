@@ -111,20 +111,34 @@ class Character(py.sprite.Sprite):
         self.attack = 10
         self.defense = 5
         self.speed = 20
+
+        # Combat timing
+        self.last_attack_time = 0
+        self.attack_cooldown = 1000 # 1 second between attacks
     
     def take_damage(self, damage):
         actual_damage = max(damage - self.defense, 0)
         self.health -= actual_damage
         return actual_damage
+    
+    def can_attack(self):
+        """Check if character can attack based on cooldown"""
+        current_time = py.time.get_ticks()
+        return current_time - self.last_attack_time > self.attack_cooldown
 
     def is_alive(self):
         """Checks if the character is alive"""
         # Returns a true or false
         return self.health > 0
 
-    def attack_target(self, target):
-        damage = self.attack
-        return target.take_damage(damage)
+    def attack(self, target):
+        """Perform attack on target"""
+        if self.can_attack():
+            damage = self.attack
+            dealt_damage = target.take_damage(damage)
+            self.last_attack_time = py.time.get_ticks()
+            return dealt_damage
+        return 0
     
 
 class Player(Character):
@@ -137,7 +151,24 @@ class Player(Character):
         self.health = self.max_health
         self.attack = 15
         self.defense = 10
+        self.experience = 0
+        self.level = 1
         self.inventory = []
+
+    def gain_experience(self, amount):
+        """Gain experience and check for level up"""
+        self.experience += amount
+        if self.experience >= 100 * self.level:
+            self.level_up()
+        
+    def level_up(self):
+        """Increase player stats when leveling up"""
+        self.level += 1
+        self.max_health += 20
+        self.attack += 5
+        self.defense += 3
+        self.health = self.max_health
+        print(f"Level up baby!!!! Now level {self.level}")
 
     
     def pickup_item(self, item):
@@ -151,7 +182,7 @@ class Enemy(Character):
     """
     def __init__(self, x, y):
         super().__init__(x, y, 'G', (255, 0, 0))
-        # Use LCG for slight stati variation
+        # Use LCG for slight stat variation
         lcg = LinearCongruentialGenerator()
         
         # Enemy specific Customizations
@@ -185,6 +216,7 @@ class Game:
         # Sprite Groups
         self.all_sprites = py.sprite.Group()
         self.enemy_sprites = py.sprite.Group()
+        self.wall_sprites = py.sprite.Group()
 
         # Create Player
         spawn_x, spawn_y = self.dungeon_generator.get_player_spawn_point()
@@ -199,6 +231,10 @@ class Game:
 
         self.clock = py.time.Clock()
 
+        # Combat text
+        self.font = py.font.SysFont('courier', 20)
+        self.combat_messages = []
+
 
     def draw_dungeon(self):
         """Draws the dungeon to the screen"""
@@ -208,6 +244,9 @@ class Game:
                 color = (0, 0, 0)
                 if tile == '#':
                     color = (100, 100, 100)
+                    wall = py.sprite.Sprite()
+                    wall.rect = py.Rect(x * 20, y * 20, 20, 20)
+                    self.wall_sprites.add(wall)
                 elif tile == '.':
                     color = (200, 200, 200)
                 elif tile == '+':
@@ -220,17 +259,75 @@ class Game:
                 )
 
 
+    def handle_wall_collision(self):
+        """Prevent player from moving through walls"""
+        wall_collisions = py.sprite.spritecollide(self.player, self.wall_sprites, False)
+        if wall_collisions:
+            # Revert to previous position
+            self.player.rect.x = self.player.x * 20
+            self.player.rect.y = self.player.y * 20
+
 
     def handle_combat(self):
-        """Handles combat by checking collisions"""
-        collided_enemies = py.sprite.spritecollide(self.player, self.enemy_sprites, True)
+        """Handle combat"""
+        # This portion was written with ai
+        # Check for enemy collisions
+        collided_enemies = py.sprite.spritecollide(self.player, self.enemy_sprites, False)
 
         for enemy in collided_enemies:
-            damage_dealt = self.player.attack_target(enemy)
-            print(f"Player dealt {damage_dealt} damage!")
+            # Player attacks enemy
+            player_damage = self.player.attack(enemy)
+            if player_damage > 0:
+                message = f"Player deals {player_damage} damage to Goblin!"
+                self.add_combat_message(message)
 
+            # Enemy attacks player
+            enemy_damage = enemy.attack(self.player)
+            if enemy_damage > 0:
+                message = f"Goblin deals {enemy_damage} damage to Player!"
+                self.add_combat_message(message)
+
+            # Check if enemy is defeated
             if not enemy.is_alive():
-                print("Enemy defeated!")
+                message = "Goblin defeated!"
+                self.add_combat_message(message)
+                self.player.gain_experience(enemy.experience_value)
+                self.enemy_sprites.remove(enemy)
+                self.all_sprites.remove(enemy)
+
+            # Check if player is defeated
+            if not self.player.is_alive():
+                message = "Game Over! Player Defeated"
+                self.add_combat_message(message)
+                py.time.wait(2000)
+                py.quit()
+            
+    def add_combat_message(self,message):
+        """Add combat message"""
+        self.combat_messages.append({
+            'text': message,
+            'time': py.time.get_ticks(),
+            'duration': 2000 # Message appears for 2 secs
+        })
+
+    def draw_combat_messages(self):
+        """Draw combat messages on screen"""
+        current_time = py.time.get_ticks()
+        y_offset = 10
+
+        # Remove old messages
+        # Because they're lame
+        self.combat_messages = [
+            msg for msg in self.combat_messages
+            if current_time - msg ['time'] < msg['duration']
+        ]
+
+        # Draws remaining messages
+        for msg in self.combat_messages:
+            text_surface = self.font.render(msg['text'], True, (255, 255, 255))
+            self.screen.blit(text_surface, (10, y_offset))
+            y_offset += 30
+
             
     def run(self):
         running = True
@@ -241,15 +338,23 @@ class Game:
 
             # Movement and combat
             keys = py.key.get_pressed()
-            if keys[py.K_UP]:
-                self.player.rect.y -= self.player.speed
-            if keys[py.K_DOWN]:
-                self.player.rect.y += self.player.speed
-            if keys[py.K_LEFT]:
-                self.player.rect.x -= self.player.speed
-            if keys[py.K_RIGHT]:
-                self.player.rect.x += self.player.speed
+            move_speed = 5
 
+            # Store previous position
+            prev_x, prev_y = self.player.rect.x, self.player.rect.y
+            if keys[py.K_UP]:
+                self.player.rect.y -= move_speed
+            if keys[py.K_DOWN]:
+                self.player.rect.y += move_speed
+            if keys[py.K_LEFT]:
+                self.player.rect.x -= move_speed
+            if keys[py.K_RIGHT]:
+                self.player.rect.x += move_speed
+
+            # Handle wall collisions
+            self.handle_wall_collision()
+
+            # Handle Combat
             self.handle_combat()
 
             # Clear screen
@@ -261,8 +366,12 @@ class Game:
 
             # Draw sprites
             self.all_sprites.draw(self.screen)
-            py.display.flip()
 
+            # Draw Combat messages
+            self.draw_combat_messages()
+            
+            # Update display
+            py.display.flip()
             self.clock.tick(10)  # Control game speed
 
         py.quit()
