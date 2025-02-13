@@ -316,6 +316,7 @@ class Game:
             
     def add_combat_message(self,message):
         """Add combat message"""
+        print(message)
         self.combat_messages.append({
             'text': message,
             'time': py.time.get_ticks(),
