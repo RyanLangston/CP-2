@@ -347,7 +347,7 @@ class Game:
 
             # Movement and combat
             keys = py.key.get_pressed()
-            move_speed = 10
+            move_speed = 5
 
             if not self.in_combat:
                 # Store previous position
