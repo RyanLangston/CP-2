@@ -131,7 +131,7 @@ class Character(py.sprite.Sprite):
         # Returns a true or false
         return self.health > 0
 
-    def attack(self, target):
+    def perform_attack(self, target):
         """Perform attack on target"""
         if self.can_attack():
             damage = self.attack
@@ -234,39 +234,46 @@ class Game:
         # Combat text
         self.font = py.font.SysFont('courier', 20)
         self.combat_messages = []
+        self.in_combat = False
 
 
     def draw_dungeon(self):
         """Draws the dungeon to the screen"""
         tile_size = 20
+        self.wall_sprites.empty()  # Clear previous wall sprites
+        font = py.font.SysFont('courier', 15)
         for y, row in enumerate(self.dungeon_generator.dungeon_map):
             for x, tile in enumerate(row):
-                color = (0, 0, 0)
-                if tile == '#':
-                    color = (100, 100, 100)
-                    wall = py.sprite.Sprite()
-                    wall.rect = py.Rect(x * 20, y * 20, 20, 20)
-                    self.wall_sprites.add(wall)
-                elif tile == '.':
-                    color = (200, 200, 200)
-                elif tile == '+':
-                    color = (255,255,0)
-                
+                color = (255, 255, 255)  # White color for all tiles
                 py.draw.rect(
                     self.screen,
                     color,
-                    ( x * tile_size, y * tile_size, tile_size, tile_size)
+                    (x * tile_size, y * tile_size, tile_size, tile_size)
                 )
-
+                if tile == '#':
+                    wall = py.sprite.Sprite()
+                    wall.image = py.Surface((tile_size, tile_size))
+                    wall.image.fill(color)
+                    wall.rect = wall.image.get_rect()
+                    wall.rect.topleft = (x * tile_size, y * tile_size)
+                    self.wall_sprites.add(wall)
+                    text = font.render('#', True, (0, 0, 0))  # Black ASCII character
+                elif tile == '.':
+                    text = font.render('.', True, (0, 0, 0))  # Black ASCII character
+                elif tile == '+':
+                    text = font.render('+', True, (0, 0, 0))  # Black ASCII character
+                else:
+                    continue
+                text_rect = text.get_rect(center=(x * tile_size + 10, y * tile_size + 10))
+                self.screen.blit(text, text_rect)
 
     def handle_wall_collision(self):
         """Prevent player from moving through walls"""
         wall_collisions = py.sprite.spritecollide(self.player, self.wall_sprites, False)
         if wall_collisions:
             # Revert to previous position
-            self.player.rect.x = self.player.x * 20
-            self.player.rect.y = self.player.y * 20
-
+            self.player.rect.x = self.prev_x
+            self.player.rect.y = self.prev_y
 
     def handle_combat(self):
         """Handle combat"""
@@ -274,33 +281,37 @@ class Game:
         # Check for enemy collisions
         collided_enemies = py.sprite.spritecollide(self.player, self.enemy_sprites, False)
 
-        for enemy in collided_enemies:
-            # Player attacks enemy
-            player_damage = self.player.attack(enemy)
-            if player_damage > 0:
-                message = f"Player deals {player_damage} damage to Goblin!"
-                self.add_combat_message(message)
+        if collided_enemies:
+            self.in_combat = True
+            for enemy in collided_enemies:
+                # Player attacks enemy
+                player_damage = self.player.perform_attack(enemy)
+                if player_damage > 0:
+                    message = f"Player deals {player_damage} damage to Goblin!"
+                    self.add_combat_message(message)
 
-            # Enemy attacks player
-            enemy_damage = enemy.attack(self.player)
-            if enemy_damage > 0:
-                message = f"Goblin deals {enemy_damage} damage to Player!"
-                self.add_combat_message(message)
+                # Enemy attacks player
+                enemy_damage = enemy.perform_attack(self.player)
+                if enemy_damage > 0:
+                    message = f"Goblin deals {enemy_damage} damage to Player!"
+                    self.add_combat_message(message)
 
-            # Check if enemy is defeated
-            if not enemy.is_alive():
-                message = "Goblin defeated!"
-                self.add_combat_message(message)
-                self.player.gain_experience(enemy.experience_value)
-                self.enemy_sprites.remove(enemy)
-                self.all_sprites.remove(enemy)
+                # Check if enemy is defeated
+                if not enemy.is_alive():
+                    message = "Goblin defeated!"
+                    self.add_combat_message(message)
+                    self.player.gain_experience(enemy.experience_value)
+                    self.enemy_sprites.remove(enemy)
+                    self.all_sprites.remove(enemy)
+                    self.in_combat = False
 
-            # Check if player is defeated
-            if not self.player.is_alive():
-                message = "Game Over! Player Defeated"
-                self.add_combat_message(message)
-                py.time.wait(2000)
-                py.quit()
+                # Check if player is defeated
+                if not self.player.is_alive():
+                    message = "Game Over! Player Defeated"
+                    self.add_combat_message(message)
+                    py.time.wait(2000)
+                    py.quit()
+                    return
             
     def add_combat_message(self,message):
         """Add combat message"""
@@ -338,28 +349,28 @@ class Game:
 
             # Movement and combat
             keys = py.key.get_pressed()
-            move_speed = 5
+            move_speed = 10
 
-            # Store previous position
-            prev_x, prev_y = self.player.rect.x, self.player.rect.y
-            if keys[py.K_UP]:
-                self.player.rect.y -= move_speed
-            if keys[py.K_DOWN]:
-                self.player.rect.y += move_speed
-            if keys[py.K_LEFT]:
-                self.player.rect.x -= move_speed
-            if keys[py.K_RIGHT]:
-                self.player.rect.x += move_speed
+            if not self.in_combat:
+                # Store previous position
+                self.prev_x, self.prev_y = self.player.rect.x, self.player.rect.y
+                if keys[py.K_UP]:
+                    self.player.rect.y -= move_speed
+                if keys[py.K_DOWN]:
+                    self.player.rect.y += move_speed
+                if keys[py.K_LEFT]:
+                    self.player.rect.x -= move_speed
+                if keys[py.K_RIGHT]:
+                    self.player.rect.x += move_speed
 
-            # Handle wall collisions
-            self.handle_wall_collision()
+                # Handle wall collisions
+                self.handle_wall_collision()
 
             # Handle Combat
             self.handle_combat()
 
             # Clear screen
-            self.screen.fill((0, 0, 0))
-
+            self.screen.fill((0, 0, 0))  # Black background
 
             # Draw dungeon
             self.draw_dungeon()
@@ -372,7 +383,7 @@ class Game:
             
             # Update display
             py.display.flip()
-            self.clock.tick(10)  # Control game speed
+            self.clock.tick(60)  # Control game speed
 
         py.quit()
 
