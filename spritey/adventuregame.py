@@ -327,19 +327,17 @@ class Game:
         y_offset = 10
 
         # Remove old messages
-        # Because they're lame
         self.combat_messages = [
             msg for msg in self.combat_messages
-            if current_time - msg ['time'] < msg['duration']
+            if current_time - msg['time'] < msg['duration']
         ]
 
-        # Draws remaining messages
+        # Draw remaining messages
         for msg in self.combat_messages:
-            text_surface = self.font.render(msg['text'], True, (255, 255, 255))
+            text_surface = self.font.render(msg['text'], True, (255, 255, 255))  # White text
             self.screen.blit(text_surface, (10, y_offset))
             y_offset += 30
 
-            
     def run(self):
         running = True
         while running:
