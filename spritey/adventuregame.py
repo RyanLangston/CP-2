@@ -26,6 +26,63 @@ class LinearCongruentialGenerator:
         # Generate random number in specific range
         return min_val + self.next() * (max_val - min_val)
 
+class ProceduralDungeonGenerator:
+    def __init__(self, width=50, height=50, seed=None):
+        self.width = width
+        self.height = height
+        self.lcg = LinearCongruentialGenerator(seed)
+        self.dungeon_map = [[ ' ' for _ in range(width)] for _ in range(height)]
+        self.enemy_positions = []
+
+    def generate_dungeon(self):
+        """Generates basic dungeon structures"""
+        for y in range(self.height):
+            for x in range(self.width):
+                noise = self.lcg.next()
+                
+                if noise < 0.3:
+                    self.dungeon_map[y][x] = '#'
+                elif noise < 0.7:
+                    self.dungeon_map[y][x] = '.'
+                else:
+                    self.dungeon_map[y][x]
+        
+        # Run a check to ensure borders are walls
+        for x in range(self.width):
+            self.dungeon_map[0][x] = '#'
+            self.dungeon_map[self.height-1][x] = '#'
+
+        for y in range(self.height):
+            self.dungeon_map[y][0] = '#'
+            self.dungeon_map[y][self.width-1] = '#'
+        
+    def place_enemies(self, enemy_count=20):
+        """Places enemeies"""
+        # Clear previous enemy positions
+        self.enemy_positions.clear()
+
+        # Place enemies procedurally
+        for _ in range(enemy_count):
+            attempts = 0
+            while attempts < 100:
+                x = int(self.lcg.range(1, self.width-1))
+                y = int(self.lcg.range(1, self.height-1))
+
+                # Only place on floor tiles and also avoid dupes
+                if (self.dungeon_map[y][x] == '.' and (x, y) not in self.enemy_positions):
+                    self.enemy_positions.append((x,y))
+                    break
+
+    def get_player_spawn_point(self):
+        """Calculates and sets a valid spawn point for the player"""
+        while True:
+            x = int(self.lcg.range(1, self.width-1))
+            y = int(self.lcg.range(1, self.height-1))
+
+            if self.dungeon_map[y][x] == '.':
+                return x, y
+
+
 class Character(py.sprite.Sprite):
     """Character can be either an enemy or the player"""
     def __init__(self, x, y, char, color: tuple):
@@ -109,16 +166,57 @@ class Game:
         self.screen = py.display.set_mode((800, 600))
         py.display.set_caption("Awesome Roguelike")
 
+        # Dungeon Generation
+        self.dungeon_generator = ProceduralDungeonGenerator(
+            width=50,
+            height=50,
+            seed= create_seed()
+        )
+
+        # Generate dungeon layout
+        self.dungeon_generator.generate_dungeon()
+
+        # Place enemies
+        self.dungeon_generator.place_enemies()
+
         # Sprite Groups
         self.all_sprites = py.sprite.Group()
         self.enemy_sprites = py.sprite.Group()
 
         # Create Player
-        self.player = Player(5, 5)
+        spawn_x, spawn_y = self.dungeon_generator.get_player_spawn_point()
+        self.player = Player(spawn_x, spawn_y)
         self.all_sprites.add(self.player)
-
+    
         # Create enemies
-        # TODO: Add to dungeon procedural generation logic
+        for ex, ey in self.dungeon_generator.enemy_positions:
+            enemy = Enemy(ex, ey)
+            self.all_sprites.add(enemy)
+            self.enemy_sprites.add(enemy)
+
+        self.clock = py.time.Clock()
+
+
+    def draw_dungeon(self):
+        """Draws the dungeon to the screen"""
+        tile_size = 20
+        for y, row in enumerate(self.dungeon_generator.dungeon_map):
+            for x, tile in enumerate(row):
+                color = (0, 0, 0)
+                if tile == '#':
+                    color = (100, 100, 100)
+                elif tile == '.':
+                    color = (200, 200, 200)
+                elif tile == '+':
+                    color = (255,255,0)
+                
+                py.draw.rect(
+                    self.screen,
+                    color,
+                    ( x * tile_size, y * tile_size, tile_size, tile_size)
+                )
+
+
 
     def handle_combat(self):
         """Handles combat by checking collisions"""
@@ -151,8 +249,14 @@ class Game:
 
             self.handle_combat()
 
-            # Drawing
-            self.screen.fill((200,200,200))
+            # Clear screen
+            self.screen_fill((0, 0, 0))
+
+
+            # Draw dungeon
+            self.draw_dungeon()
+
+            # Draw sprites
             self.all_sprites.draw(self.screen)
             py.display.flip()
 
