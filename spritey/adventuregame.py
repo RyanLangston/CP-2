@@ -222,6 +222,7 @@ class Game:
         spawn_x, spawn_y = self.dungeon_generator.get_player_spawn_point()
         self.player = Player(spawn_x, spawn_y)
         self.all_sprites.add(self.player)
+        self.prev_x, self.prev_y = self.player.rect.x, self.player.rect.y  # Initialize previous position
     
         # Create enemies
         for ex, ey in self.dungeon_generator.enemy_positions:
@@ -347,7 +348,7 @@ class Game:
 
             # Movement and combat
             keys = py.key.get_pressed()
-            move_speed = 5
+            move_speed = 1
 
             if not self.in_combat:
                 # Store previous position
