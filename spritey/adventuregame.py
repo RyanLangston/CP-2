@@ -192,7 +192,7 @@ class Enemy(Character):
         # Enemy specific Customizations
         self.max_health = int(50 + lcg.next() * 20) # 50 - 70 health
         self.health = self.max_health
-        self.attack = 12
+        self.attack = 300
         self.defense = 8
         self.experience_value = 10
 
