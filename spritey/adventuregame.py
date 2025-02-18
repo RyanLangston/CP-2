@@ -42,10 +42,12 @@ class ProceduralDungeonGenerator:
                 
                 if noise < 0.3:
                     self.dungeon_map[y][x] = '#'
-                elif noise < 0.7:
-                    self.dungeon_map[y][x] = '.'
                 else:
-                    self.dungeon_map[y][x]
+                    self.dungeon_map[y][x] = '.'
+                # elif noise < 0.7:
+                #     self.dungeon_map[y][x] = '.'
+                # else:
+                #     self.dungeon_map[y][x]
         
         # Run a check to ensure borders are walls
         for x in range(self.width):
@@ -135,7 +137,9 @@ class Character(py.sprite.Sprite):
         """Perform attack on target"""
         if self.can_attack():
             damage = self.attack
-            dealt_damage = target.take_damage(damage)
+            variance = random.randint(-2, 2)  # Add variance between -2 and 2
+            calculated_damage = damage + variance
+            dealt_damage = target.take_damage(calculated_damage)
             self.last_attack_time = py.time.get_ticks()
             return dealt_damage
         return 0
@@ -188,9 +192,12 @@ class Enemy(Character):
         # Enemy specific Customizations
         self.max_health = int(50 + lcg.next() * 20) # 50 - 70 health
         self.health = self.max_health
-        self.attack = 5
-        self.defense = 2
+        self.attack = 12
+        self.defense = 8
         self.experience_value = 10
+
+        # Initialize last attack time
+        self.last_attack_time = 0
 
 
 class Game:
@@ -283,18 +290,12 @@ class Game:
         collided_enemies = py.sprite.spritecollide(self.player, self.enemy_sprites, False)
 
         if collided_enemies:
-            self.in_combat = True
+            self.in_combat = True  # Set in_combat to True when combat starts
             for enemy in collided_enemies:
                 # Player attacks enemy
                 player_damage = self.player.perform_attack(enemy)
                 if player_damage > 0:
                     message = f"Player deals {player_damage} damage to Goblin!"
-                    self.add_combat_message(message)
-
-                # Enemy attacks player
-                enemy_damage = enemy.perform_attack(self.player)
-                if enemy_damage > 0:
-                    message = f"Goblin deals {enemy_damage} damage to Player!"
                     self.add_combat_message(message)
 
                 # Check if enemy is defeated
@@ -304,7 +305,12 @@ class Game:
                     self.player.gain_experience(enemy.experience_value)
                     self.enemy_sprites.remove(enemy)
                     self.all_sprites.remove(enemy)
-                    self.in_combat = False
+                elif enemy.is_alive():
+                    # Enemy attacks player
+                    enemy_damage = enemy.perform_attack(self.player)
+                    if enemy_damage > 0:
+                        message = f"Goblin deals {enemy_damage} damage to player"
+                        self.add_combat_message(message)
 
                 # Check if player is defeated
                 if not self.player.is_alive():
@@ -313,6 +319,9 @@ class Game:
                     py.time.wait(2000)
                     py.quit()
                     return
+            
+            # End combat turn
+            self.in_combat = False  # Reset in_combat to False after combat turn is processed
             
     def add_combat_message(self,message):
         """Add combat message"""
@@ -351,6 +360,9 @@ class Game:
             keys = py.key.get_pressed()
             move_speed = 1
 
+            # Handle Combat
+            self.handle_combat()
+
             if not self.in_combat:
                 # Store previous position
                 self.prev_x, self.prev_y = self.player.rect.x, self.player.rect.y
@@ -366,8 +378,6 @@ class Game:
                 # Handle wall collisions
                 self.handle_wall_collision()
 
-            # Handle Combat
-            self.handle_combat()
 
             # Clear screen
             self.screen.fill((0, 0, 0))  # Black background
