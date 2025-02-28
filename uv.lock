@@ -10,6 +10,7 @@ members = [
     "oop-practice",
     "peer-reviews",
     "spritey",
+    "strings",
 ]
 
 [[package]]
@@ -122,3 +123,8 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [{ name = "pygame", specifier = ">=2.6.1" }]
+
+[[package]]
+name = "strings"
+version = "0.1.0"
+source = { virtual = "strings" }
