@@ -8,6 +8,7 @@ members = [
     "cp-2",
     "emoji",
     "oop-practice",
+    "paystub",
     "peer-reviews",
     "spritey",
     "strings",
@@ -61,6 +62,11 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [{ name = "pygame", specifier = ">=2.6.1" }]
+
+[[package]]
+name = "paystub"
+version = "0.1.0"
+source = { virtual = "paystub" }
 
 [[package]]
 name = "peer-reviews"
