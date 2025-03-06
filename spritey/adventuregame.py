@@ -8,7 +8,6 @@ def create_seed():
     return seed
 
 class LinearCongruentialGenerator:
-    # THIS WAS WRITTEN WITH AI
     def __init__(self, seed=None):
         self.seed = seed or random.randint(0, 2**32)
 
