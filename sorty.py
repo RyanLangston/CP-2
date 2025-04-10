@@ -1,12 +1,15 @@
 import random
 import time
 
-myList = []
-
-for i in range(1000):
-    number = random.randint(1, 1000)
-    myList.append(number)
-    myList.sort()
+def calcList(maxValue, howMany):
+    for i in range(howMany):
+        myList = []
+        number = random.randint(0, maxValue)
+        myList.append(number)
+        myList.sort()
+        return myList
+    
+myList = calcList
 
 def linear_search(list, target):
     hits = []
