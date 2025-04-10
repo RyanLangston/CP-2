@@ -68,17 +68,35 @@ def linear_search(listToSort: list, target: int):
 def binary_search(list, target):
     left = 0
     right = len(list) - 1
+    hits = []
 
+    # First, find any occurrence
     while left <= right:
         mid = (left + right) // 2
 
         if list[mid] == target:
-            return mid
+            # Found one occurrence, now check for others
+            hits.append(mid)
+            
+            # Check to the left
+            temp_left = mid - 1
+            while temp_left >= 0 and list[temp_left] == target:
+                hits.append(temp_left)
+                temp_left -= 1
+                
+            # Check to the right
+            temp_right = mid + 1
+            while temp_right < len(list) and list[temp_right] == target:
+                hits.append(temp_right)
+                temp_right += 1
+                
+            return sorted(hits)  # Return sorted indices
         elif list[mid] < target:
             left = mid + 1
         else:
             right = mid - 1
-    return -1
+            
+    return hits  # Return empty list if not found
 
 
 # target = int(input("What's the number? "))
