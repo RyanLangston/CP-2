@@ -6,7 +6,6 @@ def calcList(maxValue, howMany):
         myList = []
         number = random.randint(0, maxValue)
         myList.append(number)
-        # myList.sort()
         return myList
     
 myList = calcList
