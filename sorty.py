@@ -12,7 +12,7 @@ def calc_list(maxValue: int, howMany: int) -> list:
 
 
 # This list should never be sorted inplace
-original_list = calc_list(10000, 300000)
+original_list = calc_list(10000, 10000)
 
 
 def selection_sort(listToSort: list)  -> list:
@@ -43,6 +43,7 @@ def selection_sort(listToSort: list)  -> list:
 
         newList[i], newList[min_index] = newList[min_index], newList[i]
         iteration_counter += 1 
+        print(iteration_counter)
     
     end_time = time.perf_counter()
     print(f"Total iterations: {iteration_counter}")
