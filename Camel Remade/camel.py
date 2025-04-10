@@ -106,7 +106,9 @@ class Game:
         """Stuff that runs every single game loop regardless"""
         self.natives.move()
         self.player.increase_thirst()
-        print(f"The natives are {self.player.distance_traveled - self.natives.distance_traveled} miles behind you.")
+        print(
+            f"The natives are {self.player.distance_traveled - self.natives.distance_traveled} miles behind you."
+        )
         print(f"Camel exhaustion level: {self.camel.exhaustion}")
         print(f"Player thirst level: {self.player.thirst}")
 
@@ -127,7 +129,7 @@ class Game:
             self.check_status()
         elif choice == 6:
             self.game_over = True
-        
+
         if choice in [2, 3, 4]:
             self.every_round()
             self.check_game_status()
@@ -137,7 +139,10 @@ class Game:
         print("\nThirst: " + str(self.player.thirst))
         print("Canteen drinks left: " + str(self.player.canteen))
         print("Distance traveled: " + str(self.player.distance_traveled))
-        print("Miles the natives are from you: " + str(self.player.distance_traveled - self.natives.distance_traveled))
+        print(
+            "Miles the natives are from you: "
+            + str(self.player.distance_traveled - self.natives.distance_traveled)
+        )
         print("Camel exhaustion: " + str(self.camel.exhaustion))
 
     def play(self):

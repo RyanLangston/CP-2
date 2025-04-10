@@ -19,13 +19,11 @@ done = False
 clock = py.time.Clock()
 
 
-
 # Main Program Loop
 while not done:
     for event in py.event.get():
         if event.type == py.QUIT:
             done = True
-
 
     # Clear Screen
     screen.fill(WHITE)

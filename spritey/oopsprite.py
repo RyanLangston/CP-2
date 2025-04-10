@@ -22,9 +22,11 @@ screen = py.display.set_mode((size), vsync=1)
 done = False
 clock = py.time.Clock()
 
+
 def random_color():
     """Generate a random color."""
     return (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+
 
 class Circle(py.sprite.Sprite):
     def __init__(self, color, radius):
@@ -43,14 +45,19 @@ class Circle(py.sprite.Sprite):
         """Updates stuff"""
         self.rect.y += self.speed_y
         self.rect.x += self.speed_x
-        if self.rect.right < 0 or self.rect.left > size[0] or self.rect.bottom < 0 or self.rect.top > size[1]:
+        if (
+            self.rect.right < 0
+            or self.rect.left > size[0]
+            or self.rect.bottom < 0
+            or self.rect.top > size[1]
+        ):
             self.respawn()
 
     def reset_pos(self):
         """Resets the position"""
         self.rect.y = random.randint(0, size[1])
         self.rect.x = random.randint(0, size[0])
-    
+
     def grow(self, amount):
         """Grows the circle by a set amount"""
         self.radius += amount
@@ -64,21 +71,32 @@ class Circle(py.sprite.Sprite):
             circles.remove(self)
         self.kill()
         min_radius = max(10, player.radius * 0.8)
-        max_radius = player.radius * 2  # Allow new circles to be up to twice the player's size
+        max_radius = (
+            player.radius * 2
+        )  # Allow new circles to be up to twice the player's size
         new_radius = random.uniform(min_radius, max_radius)
         new_color = random_color()
         new_circle = Circle(new_color, new_radius)
         # Respawn offscreen
         if random.choice([True, False]):
-            new_circle.rect.x = random.choice([-new_circle.radius * 2, size[0] + new_circle.radius * 2])
+            new_circle.rect.x = random.choice(
+                [-new_circle.radius * 2, size[0] + new_circle.radius * 2]
+            )
             new_circle.rect.y = random.uniform(0, size[1])
         else:
-            new_circle.rect.y = random.choice([-new_circle.radius * 2, size[1] + new_circle.radius * 2])
-        new_circle.speed_y = random.choice([-1, 1]) * random.randint(3, 6 + int(player.radius // 10))
-        new_circle.speed_x = random.choice([-1, 1]) * random.randint(3, 6 + int(player.radius // 10))
+            new_circle.rect.y = random.choice(
+                [-new_circle.radius * 2, size[1] + new_circle.radius * 2]
+            )
+        new_circle.speed_y = random.choice([-1, 1]) * random.randint(
+            3, 6 + int(player.radius // 10)
+        )
+        new_circle.speed_x = random.choice([-1, 1]) * random.randint(
+            3, 6 + int(player.radius // 10)
+        )
         if new_circle not in circles:
             circles.add(new_circle)
             all_sprites.add(new_circle)
+
 
 # Create Sprite Groups
 all_sprites = py.sprite.Group()
@@ -117,7 +135,9 @@ while not done:
     all_sprites.update()
 
     # Check for collisions
-    collided_circles = py.sprite.spritecollide(player, circles, False, py.sprite.collide_circle)
+    collided_circles = py.sprite.spritecollide(
+        player, circles, False, py.sprite.collide_circle
+    )
     for circle in collided_circles:
         if player.radius > circle.radius:
             player.grow(3)

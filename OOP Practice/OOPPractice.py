@@ -44,10 +44,15 @@ class Rectangle:
             self.changeX *= -1
         if self.y > SIZE[1] - self.height or self.y < 0:
             self.changeY *= -1
-        
+
         # This portionw is ai written, but it essentially reset its value to the center of the screen
         # Which is SIZE // 2
-        if self.x > SIZE[0] - self.width or self.x < 0 or self.y > SIZE[1] - self.height or self.y < 0:
+        if (
+            self.x > SIZE[0] - self.width
+            or self.x < 0
+            or self.y > SIZE[1] - self.height
+            or self.y < 0
+        ):
             self.x = SIZE[0] // 2
             self.y = SIZE[1] // 2
 
