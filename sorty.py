@@ -43,7 +43,7 @@ def linear_search(list, target):
             hits.append(i)
     return hits
 
-def binary_search(list,targt):
+def binary_search(list, targt):
     left = 0
     right = len(list) - 1
 
