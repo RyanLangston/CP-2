@@ -11,7 +11,8 @@ def calc_list(maxValue: int, howMany: int) -> list:
     return myList
 
 
-nonSortedList = calc_list(10000, 300000)
+# This list should never be sorted inplace
+original_list = calc_list(10000, 300000)
 
 
 def selection_sort(listToSort: list)  -> list:
@@ -51,7 +52,7 @@ def selection_sort(listToSort: list)  -> list:
 
     return newList
 
-testList = selection_sort(nonSortedList)
+testList = selection_sort(original_list)
 # print(testList)
 
 def linear_search(listToSort: list, target: int):
