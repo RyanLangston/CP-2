@@ -13,10 +13,10 @@ def calc_list(maxValue: int, howMany: int) -> list:
 nonSortedList = calc_list(8192, 3000)
 
 
-def selection_sort(listToSort: list):
+def selection_sort(listToSort: list)  -> list:
+    """Uses selection sort to sort a given list"""
     # Copy the list to a new list
     newList = listToSort.copy()
-    """Uses selection sort to sort a given list"""
     # shamelessly stolen from scaler.com, website included an explanation
     for i in range(len(newList)):
         # Set min_index = to first unsorted element
@@ -36,10 +36,11 @@ def selection_sort(listToSort: list):
         return newList
 
 
-def linear_search(list, target):
+def linear_search(listToSort: list, target: int):
+    """Given a list, searches it for a given target"""
     hits = []
-    for i in range(len(list)):
-        if list[i] == target:
+    for i in range(len(listToSort)):
+        if listToSort[i] == target:
             hits.append(i)
     return hits
 
