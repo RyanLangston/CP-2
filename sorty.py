@@ -24,12 +24,16 @@ def selection_sort(listToSort: list)  -> list:
 
     print(f"list took {elapsed_time_to_copy:.6f} seconds to copy")
 
+    # Initialize counter before starting the sort
+    iteration_counter = 0
+    # Start timing the sort process
+    start_time = time.perf_counter()
+    
     # shamelessly stolen from scaler.com, website included an explanation
     for i in range(len(newList)):
         # Set min_index = to first unsorted element
         min_index = i
 
-        start_time = time.perf_counter()
         # Loop to iterate over unsorted sub arrary
         for j in range(i + 1, len(newList)):
             # Finding the minimum element in the unsorted sub-array
@@ -37,10 +41,13 @@ def selection_sort(listToSort: list)  -> list:
                 min_index = j
 
         newList[i], newList[min_index] = newList[min_index], newList[i]
+        iteration_counter += 1 
+    
     end_time = time.perf_counter()
+    print(f"Total iterations: {iteration_counter}")
 
     elapsed_time = end_time - start_time
-    print(f"List took {end_time:.4f} seconds to sort")
+    print(f"List took {elapsed_time:.4f} seconds to sort")
 
     return newList
 
@@ -56,7 +63,7 @@ def linear_search(listToSort: list, target: int):
     return hits
 
 
-def binary_search(list, targt):
+def binary_search(list, target):
     left = 0
     right = len(list) - 1
 
@@ -68,7 +75,7 @@ def binary_search(list, targt):
         elif list[mid] < target:
             left = mid + 1
         else:
-            right = mid + 1
+            right = mid - 1
     return -1
 
 
