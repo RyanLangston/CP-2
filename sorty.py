@@ -54,11 +54,12 @@ def selection_sort(listToSort: list) -> list:
     return newList
 
 
-def insertion_sort(arr):
+def insertion_sort(listToSort: list):
+    arr = listToSort.copy()
     n = len(arr)
 
     if n <= 1:
-        return  # List would already be sorted
+        return arr  # List would already be sorted
 
     for i in range(1, n):
         key = arr[i]
