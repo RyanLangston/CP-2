@@ -15,7 +15,7 @@ def calc_list(maxValue: int, howMany: int) -> list:
 original_list = calc_list(10000, 10000)
 
 
-def selection_sort(listToSort: list)  -> list:
+def selection_sort(listToSort: list) -> list:
     """Uses selection sort to sort a given list"""
     # Copy the list to a new list and track how long it takes to copy
     start_time_to_copy = time.perf_counter()
@@ -29,7 +29,7 @@ def selection_sort(listToSort: list)  -> list:
     iteration_counter = 0
     # Start timing the sort process
     start_time = time.perf_counter()
-    
+
     # shamelessly stolen from scaler.com, website included an explanation
     for i in range(len(newList)):
         # Set min_index = to first unsorted element
@@ -42,9 +42,9 @@ def selection_sort(listToSort: list)  -> list:
                 min_index = j
 
         newList[i], newList[min_index] = newList[min_index], newList[i]
-        iteration_counter += 1 
+        iteration_counter += 1
         print(iteration_counter)
-    
+
     end_time = time.perf_counter()
     print(f"Total iterations: {iteration_counter}")
 
@@ -53,8 +53,14 @@ def selection_sort(listToSort: list)  -> list:
 
     return newList
 
+
+def insertion_sort():
+    pass
+
+
 testList = selection_sort(original_list)
 # print(testList)
+
 
 def linear_search(listToSort: list, target: int):
     """Given a list, searches it for a given target"""
@@ -77,25 +83,25 @@ def binary_search(list, target):
         if list[mid] == target:
             # Found one occurrence, now check for others
             hits.append(mid)
-            
+
             # Check to the left
             temp_left = mid - 1
             while temp_left >= 0 and list[temp_left] == target:
                 hits.append(temp_left)
                 temp_left -= 1
-                
+
             # Check to the right
             temp_right = mid + 1
             while temp_right < len(list) and list[temp_right] == target:
                 hits.append(temp_right)
                 temp_right += 1
-                
+
             return sorted(hits)  # Return sorted indices
         elif list[mid] < target:
             left = mid + 1
         else:
             right = mid - 1
-            
+
     return hits  # Return empty list if not found
 
 
