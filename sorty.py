@@ -51,6 +51,7 @@ def selection_sort(listToSort: list) -> list:
     elapsed_time = end_time - start_time
     print(f"List took {elapsed_time:.4f} seconds to sort")
 
+    # TODO: Might need to return two variables, newList and elapsed_time
     return newList
 
 
@@ -73,6 +74,7 @@ def insertion_sort(listToSort: list):
     end_time = time.perf_counter()
     elapsed_time = end_time - start_time
     print(f"List took {elapsed_time:.4f} seconds to sort")
+    # TODO: Might need to return two variables, newList and elapsed_time
     return arr
 
 
