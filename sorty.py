@@ -58,6 +58,7 @@ def insertion_sort(listToSort: list):
     arr = listToSort.copy()
     n = len(arr)
 
+    start_time = time.perf_counter()
     if n <= 1:
         return arr  # List would already be sorted
 
@@ -69,8 +70,13 @@ def insertion_sort(listToSort: list):
             j -= 1
         arr[j + 1] = key
 
+    end_time = time.perf_counter()
+    elapsed_time = end_time - start_time
+    print(f"List took {elapsed_time:.4f} seconds to sort")
+    return arr
 
-testList = selection_sort(original_list)
+
+testList = insertion_sort(original_list)
 # print(testList)
 
 
