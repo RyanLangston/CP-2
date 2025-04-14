@@ -15,18 +15,10 @@ def calc_list(maxValue: int, howMany: int) -> list:
 original_list = calc_list(10000, 10000)
 
 
-def selection_sort(listToSort: list) -> list:
+def selection_sort(listToSort: list):
     """Uses selection sort to sort a given list"""
-    # Copy the list to a new list and track how long it takes to copy
-    start_time_to_copy = time.perf_counter()
     newList = listToSort.copy()
-    end_time_to_copy = time.perf_counter()
-    elapsed_time_to_copy = end_time_to_copy - start_time_to_copy
 
-    print(f"list took {elapsed_time_to_copy:.6f} seconds to copy")
-
-    # Initialize counter before starting the sort
-    iteration_counter = 0
     # Start timing the sort process
     start_time = time.perf_counter()
 
@@ -42,17 +34,14 @@ def selection_sort(listToSort: list) -> list:
                 min_index = j
 
         newList[i], newList[min_index] = newList[min_index], newList[i]
-        iteration_counter += 1
-        print(iteration_counter)
 
     end_time = time.perf_counter()
-    print(f"Total iterations: {iteration_counter}")
 
     elapsed_time = end_time - start_time
-    print(f"List took {elapsed_time:.4f} seconds to sort")
+    # print(f"List took {elapsed_time:.4f} seconds to sort")
 
     # TODO: Might need to return two variables, newList and elapsed_time
-    return newList
+    return newList, elapsed_time
 
 
 def insertion_sort(listToSort: list):
@@ -75,7 +64,7 @@ def insertion_sort(listToSort: list):
     elapsed_time = end_time - start_time
     print(f"List took {elapsed_time:.4f} seconds to sort")
     # TODO: Might need to return two variables, newList and elapsed_time
-    return arr
+    return arr, elapsed_time
 
 
 def quicksort(listToSort):
@@ -102,11 +91,7 @@ def quicksort(listToSort):
     return sortedList, elapsed_time
 
 
-testList = insertion_sort(original_list)
-# print(testList)
-
-
-def linear_search(listToSort: list, target: int):
+def linear_search(listToSort, target):
     """Given a list, searches it for a given target"""
     hits = []
     for i in range(len(listToSort)):
@@ -149,11 +134,61 @@ def binary_search(list, target):
     return hits  # Return empty list if not found
 
 
-# target = int(input("What's the number? "))
+def run_speed_tests():
+    """Runs the speed tests"""
+    original_list = calc_list(10000, 100000)
+    print("List has been created")
+    target = 3231
 
-# result = binary_search(nonSortedList, target)
+    # Create 5 seperate copies
+    list1 = original_list.copy()  # For unsorted linear search
+    list2 = original_list.copy()  # For sorted linear search
+    list3 = original_list.copy()  # For selection sort + binary search
+    list4 = original_list.copy()  # For insertion sort + binary search
+    list5 = original_list.copy()  # For quicksort + binary search
 
-# if result == -1:
-#     print(f"{target} not found in the list")
-# else:
-#     print(f"{target} found at index {result}")
+    # This stuff below is AI, I was lazy and didn't want to type all the print statements manually
+    # Step 8: Unsorted linear search
+    print("\nRunning unsorted linear search...")
+    _, unsorted_linear_time = linear_search(list1, target)
+
+    # Step 9: Sorted linear search
+    print("\nRunning selection sort then linear search...")
+    sorted_list2, selection_sort_time = selection_sort(list2)
+    _, sorted_linear_time = linear_search(sorted_list2, target)
+    selection_then_linear_time = selection_sort_time + sorted_linear_time
+
+    # Step 10: Selection sort + binary search
+    print("\nRunning selection sort then binary search...")
+    sorted_list3, selection_sort_time = selection_sort(list3)
+    _, binary_time = binary_search(sorted_list3, target)
+    selection_then_binary_time = selection_sort_time + binary_time
+
+    # Step 11: Insertion sort + binary search
+    print("\nRunning insertion sort then binary search...")
+    sorted_list4, insertion_sort_time = insertion_sort(list4)
+    _, binary_time = binary_search(sorted_list4, target)
+    insertion_then_binary_time = insertion_sort_time + binary_time
+
+    # Step 12: Quicksort + binary search
+    print("\nRunning quicksort then binary search...")
+    sorted_list5, quicksort_time = quicksort(list5)
+    _, binary_time = binary_search(sorted_list5, target)
+    quicksort_then_binary_time = quicksort_time + binary_time
+
+    # Print report
+    print("\n--- SPEED TEST REPORT ---")
+    print(f"Unsorted Linear Search time: {unsorted_linear_time * 1000:.2f}ms")
+    print(f"Sorted Linear Search time: {selection_then_linear_time * 1000:.2f}ms")
+    print(
+        f"Selection Sort then Binary Search time: {selection_then_binary_time * 1000:.2f}ms"
+    )
+    print(
+        f"Insertion Sort then Binary Search time: {insertion_then_binary_time * 1000:.2f}ms"
+    )
+    print(
+        f"Custom Sort (Quicksort) then Binary Search time: {quicksort_then_binary_time * 1000:.2f}ms"
+    )
+
+
+run_speed_tests()
