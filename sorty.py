@@ -94,10 +94,12 @@ def quicksort(listToSort):
 def linear_search(listToSort, target):
     """Given a list, searches it for a given target"""
     hits = []
+    start_time = time.perf_counter()
     for i in range(len(listToSort)):
         if listToSort[i] == target:
             hits.append(i)
-    return hits
+    elapesed_time = time.perf_counter() - start_time
+    return hits, elapesed_time
 
 
 def binary_search(list, target):
@@ -105,6 +107,7 @@ def binary_search(list, target):
     right = len(list) - 1
     hits = []
 
+    start_time = time.perf_counter()
     # First, find any occurrence
     while left <= right:
         mid = (left + right) // 2
@@ -131,12 +134,14 @@ def binary_search(list, target):
         else:
             right = mid - 1
 
-    return hits  # Return empty list if not found
+    elapsed_time = time.perf_counter() - start_time
+
+    return hits, elapsed_time  # Return empty list if not found
 
 
 def run_speed_tests():
     """Runs the speed tests"""
-    original_list = calc_list(10000, 100000)
+    original_list = calc_list(10000, 25000)
     print("List has been created")
     target = 3231
 
