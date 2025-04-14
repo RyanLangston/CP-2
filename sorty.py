@@ -78,6 +78,30 @@ def insertion_sort(listToSort: list):
     return arr
 
 
+def quicksort(listToSort):
+    # Now I had to learn about inner functions but I'm pretty sure I understnad it
+    start_time = time.perf_counter()
+
+    # Actual function is a inner function prefixed with _ to indicate that it shouldn't be called directly
+    def _quicksort(sublist):
+        if len(sublist) <= 1:
+            return sublist
+
+        # We go ahead use list comprehension as its slightly faster (not enough to affect results) and is considered my pythonic
+        pivot = sublist[len(sublist) // 2]
+        left = [x for x in sublist if x < pivot]
+        middle = [x for x in sublist if x == pivot]
+        right = [x for x in sublist if x > pivot]
+
+        return _quicksort(left) + middle + _quicksort(right)
+
+    sortedList = _quicksort(listToSort.copy())
+
+    elapsed_time = time.perf_counter() - start_time
+
+    return sortedList, elapsed_time
+
+
 testList = insertion_sort(original_list)
 # print(testList)
 
